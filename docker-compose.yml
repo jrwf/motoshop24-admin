@@ -1,62 +1,30 @@
 version: '3.6'
 
 services:
-
-  web:
-    image: josefjebavy/debian-apache-php8.1-nette
-    environment:
-      - NETTE_DEBUG=1
-    working_dir: /var/www/html
-    volumes:
-      - .:/var/www/html
-      - ./docker/development/web/msmtprc:/etc/msmtprc
+  app:
+    build: .
+#    image: nette-sandbox
     ports:
       - 8081:80
-      - 8082:443
-    networks:
-      - example-network
-
-  database:
-#    image: mysql:latest
-    image: mariadb:10.3.18
-    environment:
-      - MYSQL_ROOT_PASSWORD=pass
-      - MYSQL_DATABASE=example
-      - MYSQL_INITDB_SKIP_TZINFO=1 # toto vyresi prni pomaly start
-      - TZ=Europe/Prague
     volumes:
-      - ./docker/development/database:/docker-entrypoint-initdb.d/
-    networks:
-      - example-network
-    ports:
-      - 3308:3306
-
-
-  phpmyadmin:
-    depends_on:
-      - database
-    image: phpmyadmin/phpmyadmin
+      - .:/var/www/html
+      - ./.docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./.docker/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
     environment:
-      PMA_HOST: database
+      NETTE_DEBUG_SECRET: iFn2TBhcDrHyFJMW
 
+  myDB:
+#    image: mariadb:10.1
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: motoshop
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
     ports:
-      - '3380:80'
-    networks:
-      - example-network
+      - 3307:3306
 
-#  adminer:
-#    depends_on:
-#      - database
-#    image: adminer
-#    environment:
-#      PMA_HOST: database
-#    ports:
-#      - '3381:80'
-#    networks:
-#      - example-network
-
-
-networks:
-  example-network:
-    driver: bridge
-
+  adminer:
+    image: adminer
+    ports:
+      - 3000:8080
