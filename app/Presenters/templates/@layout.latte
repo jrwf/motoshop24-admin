@@ -4,6 +4,13 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 
+	<script src="{$basePath}/scripts/jquery-3.6.0.min.js" type="text/javascript"></script>
+	<!-- dataTables -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+	<script type="text/javascript" charset="utf8"
+			src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+	<script src="{$basePath}/scripts/datetime-moment.js" type="text/javascript"></script>
+	<script src="{$basePath}/scripts/moment.min.js" type="text/javascript"></script>
 	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
 </head>
 
@@ -13,7 +20,17 @@
 	{include content}
 
 	{block scripts}
-	<script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
+		<script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
+		<script>
+			function myFunction() {
+				var x = document.getElementById("prices-all");
+				if (x.className === "topnav") {
+					x.className += " responsive";
+				} else {
+					x.className = "topnav";
+				}
+			}
+		</script>
 	{/block}
 </body>
 </html>

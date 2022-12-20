@@ -39,7 +39,6 @@ class PricePresenter extends BasePresenter
 			curl_setopt($curl, CURLOPT_URL, $item['url']);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			$curl_result = curl_exec($curl);
-			bdump($item, 'item');
 
 			// EAN
 			$ean_page_content = mb_strpos($curl_result, 'product-core-info__partcode'); // Hledam pozici tridy
@@ -56,10 +55,10 @@ class PricePresenter extends BasePresenter
 			$priceFull = str_replace(' ', '', $price);
 			$priceFullWithouZeroo = mb_substr($priceFull, 0, -3);
 			$all_result = 'price: ' . $priceFullWithouZeroo;
-			$selling_price = $priceFullWithouZeroo * 1.05;
+			$selling_price = $priceFullWithouZeroo * 0.95;
+			bdump($selling_price, 'selling price 1');
 			$selling_price = (int) round($selling_price, 0);
-			bdump($all_result, 'all');
-			bdump($selling_price, 'selling price');
+			bdump($selling_price, 'selling price 2');
 			$this->price->updatePrice((int) $selling_price, $item['nid']);
 			$this->price->insertAllData($item, (int) $priceFullWithouZeroo, (int) $selling_price);
 		}
