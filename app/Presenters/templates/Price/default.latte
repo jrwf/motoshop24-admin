@@ -1,4 +1,37 @@
 {block content}
 
+<style>
+    td {
+        padding: 5px 10px;
+    }
+
+    .price {
+        text-align: right;
+        width: 180px;
+    }
+</style>
+
 <h1>Price test</h1>
-{$pokus}
+
+<table>
+    <tr>
+        <td>Nid:</td>
+        <td>Název položky:</td>
+        <td>Url:</td>
+        <td class="price">Původní cena:</td>
+        <td class="price">Aktuální cena:</td>
+        <td class="price">Prodejní cena (+5%):</td>
+        <td>Datum:</td>
+    </tr>
+    {foreach $alldata as $item}
+        <tr>
+            <td>{$item['id']}</td>
+            <td><a href="http://motoshop24.loc/node/{$item['id']}">{$item['title']}</a></td>
+            <td><a href="{$item['url']}">{$item['url']|substr:0, 20} ...</a></td>
+            <td class="price">{$item['price_previous']|number: 0, ' ', ' '},- Kč</td>
+            <td class="price">{$item['price_new']|number: 0, ' ', ' '},- Kč</td>
+            <td class="price">{$item['selling_price']|number: 0, ' ', ' '},- Kč</td>
+            <td>{$item['created']|date:'j. n. Y - H:m:s'}</td>
+        </tr>
+    {/foreach}
+</table>

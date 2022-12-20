@@ -19,39 +19,34 @@ class PricePresenter extends BasePresenter
 
 	public function renderDefault()
 	{
+		$allData = $this->price->getDataToTable();
+		bdump($allData, 'all data');
+		$this->template->alldata = $allData;
 		$this->template->pokus = 'pokus';
 	}
 
 	public function renderPrice()
 	{
+		$db_price = $this->price->getPrices();
+		bdump($db_price, 'price');
 		$db_all = $this->price->getAll();
-		bdump($db_all, 'db all');
+//		bdump($db_all, 'db all');
 		$db_result = $this->price->getUrl();
 //		bdump($db_result);
 
 		$curl = curl_init();
-		foreach ($db_all as $item) {
-//			curl_setopt($curl, CURLOPT_URL, 'https://www.yamaha-motor.eu/cz/cs/products/motorcycles/supersport/r1m-2022/accessories/rear-seat-bag/yme-rearb-ag-01/#/');
+		foreach ($db_price as $item) {
 			curl_setopt($curl, CURLOPT_URL, $item['url']);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			$curl_result = curl_exec($curl);
+			bdump($item, 'item');
 
 			// EAN
 			$ean_page_content = mb_strpos($curl_result, 'product-core-info__partcode'); // Hledam pozici tridy
 			$ean_page_content_first = mb_substr($curl_result, $ean_page_content + 29, 55 ); // Vypisu si retezec od pozice plus 55
 			$ean_page_content_end = mb_strpos($ean_page_content_first, '</span>');
 			$ean = mb_substr($ean_page_content_first, 0, $ean_page_content_end);
-//			bdump($ean, 'ean');
-//			bdump($item['field_ean_value'], 'parcode');
-			$spolu = 'ean: ' . $item['ean'] . ' a parcode: ' . $ean;
-//			bdump($spolu);
 			$eanUp = strtoupper($ean);
-			bdump($item['ean'], 'ean');
-			bdump($eanUp, 'up');
-//			bdump($ean_page_content, 'ean content');
-//			bdump($ean_page_content_first, 'ean first');
-//			bdump($ean_page_content_end, 'end');
-//			bdump($ean, 'ean');
 
 			// Price
 			$firstPosition = mb_strpos($curl_result, 'product-price-full'); // Hledam pozici tridy
@@ -59,11 +54,14 @@ class PricePresenter extends BasePresenter
 			$kc_position = mb_strpos($content, 'Kč');
 			$price = mb_substr($content, 0, $kc_position - 1);
 			$priceFull = str_replace(' ', '', $price);
-//			bdump($priceFull, 'price');
-			if ($eanUp !== $item['ean']) {
-//				$all_result = 'Puvodni cena:' . $item['price'] . ', aktulni cena: ' . $priceFull . ' Ean na webu je: ' . $item['ean'] . ' a na yamaze: ' . $ean . '<br />' . $item['url'];
-//				bdump($all_result, 'all');
-			}
+			$priceFullWithouZeroo = mb_substr($priceFull, 0, -3);
+			$all_result = 'price: ' . $priceFullWithouZeroo;
+			$selling_price = $priceFullWithouZeroo * 1.05;
+			$selling_price = (int) round($selling_price, 0);
+			bdump($all_result, 'all');
+			bdump($selling_price, 'selling price');
+			$this->price->updatePrice((int) $selling_price, $item['nid']);
+			$this->price->insertAllData($item, (int) $priceFullWithouZeroo, (int) $selling_price);
 		}
 
 	}
