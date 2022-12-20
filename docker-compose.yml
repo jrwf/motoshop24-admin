@@ -2,30 +2,28 @@ version: '3.6'
 
 services:
   app:
-    container_name: motoshop-app
+    container_name: motoshop24-admin-app
     build: .
     ports:
-      - "8081:80"
+      - "8082:80"
     volumes:
       - .:/var/www/html
       - ./.docker/php/php.ini:/usr/local/etc/php/php.ini
       - ./.docker/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
-    environment:
-      NETTE_DEBUG_SECRET: iFn2TBhcDrHyFJMW
 
   database:
-    container_name: motoshop-database
+    container_name: motoshop24-admin-database
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: ${USER_PASSWORD}
-      MYSQL_DATABASE: motoshop
+      MYSQL_DATABASE: motoshop_admin
     volumes:
       - ./.docker/mysql:/var/lib/mysql
     ports:
-      - "3307:3306"
+      - "3308:3306"
 
   adminer:
-    container_name: motoshop-adminer
+    container_name: motoshop24-admin-adminer
     image: adminer
     ports:
-      - "3000:8080"
+      - "3002:8080"

@@ -1,37 +1,136 @@
 {block content}
 
 <style>
+    thead {
+        border: 1px solid red;
+    }
+
+    .page {
+        margin: 0 40px;
+    }
+
     td {
-        padding: 5px 10px;
+        padding: 10px 20px 10px 10px !important;
+        font-size: 13px;
+        font-family: arial;
+    }
+
+    td a {
+        color: #333333;
     }
 
     .price {
         text-align: right;
         width: 180px;
     }
+
+    .date {
+        text-align: right;
+        width: 150px;
+    }
 </style>
 
-<h1>Price test</h1>
-
-<table>
-    <tr>
-        <td>Nid:</td>
-        <td>Název položky:</td>
-        <td>Url:</td>
-        <td class="price">Původní cena:</td>
-        <td class="price">Aktuální cena:</td>
-        <td class="price">Prodejní cena (+5%):</td>
-        <td>Datum:</td>
-    </tr>
-    {foreach $alldata as $item}
+<div class="page">
+    <h1>Price test</h1>
+    <table id="prices-all" class="cell-border compact stripe display hover">
+        <thead>
         <tr>
-            <td>{$item['id']}</td>
-            <td><a href="http://motoshop24.loc/node/{$item['id']}">{$item['title']}</a></td>
-            <td><a href="{$item['url']}">{$item['url']|substr:0, 20} ...</a></td>
-            <td class="price">{$item['price_previous']|number: 0, ' ', ' '},- Kč</td>
-            <td class="price">{$item['price_new']|number: 0, ' ', ' '},- Kč</td>
-            <td class="price">{$item['selling_price']|number: 0, ' ', ' '},- Kč</td>
-            <td>{$item['created']|date:'j. n. Y - H:m:s'}</td>
+            <td>Nid:</td>
+            <td class="date">Datum:</td>
+            <td>Název položky:</td>
+            <td>Url:</td>
+            <td class="price">Původní cena:</td>
+            <td class="price">Aktuální cena:</td>
+            <td class="price">Prodejní cena (-5%):</td>
         </tr>
-    {/foreach}
-</table>
+        </thead>
+        <tbody>
+        {foreach $alldata as $item}
+            <tr>
+                <td>{$item['id']}</td>
+                <td class="date">{$item['created']|date:'j. n. Y - H:m:s'}</td>
+                <td><a href="http://motoshop24.loc/node/{$item['id']}">{$item['title']}</a></td>
+                <td><a href="{$item['url']}">{$item['url']|substr:0, 30} ...</a></td>
+                <td class="price">{$item['price_previous']|number: 0, ' ', ' '},- Kč</td>
+                <td class="price">{$item['price_new']|number: 0, ' ', ' '},- Kč</td>
+                <td class="price">{$item['selling_price']|number: 0, ' ', ' '},- Kč</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+
+<script type="application/javascript">
+
+    // $(".form_datetime").datetimepicker();
+
+    $(document).ready(function () {
+        // $.fn.dataTable.moment( 'D. MM, YYYY' );
+        $('#prices-all').DataTable({
+            // Výchozí řazení
+            "order": [[0, 'desc']],
+            // "order": [[ 1, 'asc' ], [ 2, 'desc' ], [3, 'desc']],
+
+            // Nastavení počtu řádků
+            "pageLength": 25,
+
+            // Zobrazení selektů
+            // https://datatables.net/examples/api/multi_filter_select.html
+            initComplete: function () {
+                this.api().columns([5, 10]).every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.header()))
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="'+d+'">'+d+'</option>')
+                    });
+                });
+            },
+            // https://datatables.net/examples/advanced_init/footer_callback.html
+            // https://datatables.net/forums/discussion/55593
+            /*
+                        "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(), data;
+
+                            // Remove the formatting to get integer data for summation
+                            var intVal = function (i) {
+                                return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                        i : 0;
+                            };
+
+                            // Total over all pages
+                            // Musí souhlasit s počtem sloupců, počítá se od nuly.
+                            total = api
+                                .column(7)
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+
+                            // Total over this page
+                            // Musí souhlasit s počtem sloupců, počítá se od nuly.
+                            pageTotal = api
+{*.column(7, {page : 'current'})*}
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(5).footer()).html(
+                    pageTotal + ',- Kč (' + total + ',- Kč)'
+                );
+            }
+*/
+        });
+    });
+</script>
