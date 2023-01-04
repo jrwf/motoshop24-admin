@@ -29,7 +29,7 @@ class Bootstrap
 		if ($_SERVER['SERVER_NAME'] === 'localhost') {
 			$configurator->addConfig($appDir . '/config/local.neon');
 		} elseif ($_SERVER['SERVER_NAME'] === 'motoshop24-admin.jw.cz') {
-			$configurator->addConfig($appDir . '/config/local.neon');
+			$configurator->addConfig($appDir . '/config/stage.neon');
 		}
 
 		return $configurator;
