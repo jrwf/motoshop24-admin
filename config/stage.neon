@@ -1,4 +1,4 @@
 database:
 	dsn: 'mysql:host=mysql57.websupport.cz;dbname=admin24'
 	user: kxe7klnc
-	password: Bk1)k18{J]
+	password: Bk1\)k18{J]
