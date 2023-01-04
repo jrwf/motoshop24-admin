@@ -35,6 +35,32 @@ class PriceFasade
 		$this->database->query("insert into admin_prices (nid,url,price_previous,price_new,selling_price) values (?, ?, ?, ?,?)", $data['nid'], $data['url'], $data['price'], $price_new, $selling_price);
 	}
 
+	public function insertAdminUrl($data)
+	{
+		$this->database->table('admin_url')
+			->insert([
+				'nid' => $data['entity_id'],
+				'url' => $data['field_odkaz_na_zdroj_uri'],
+			]);
+	}
+
+	/**
+	 * Načítám všechny položky z databáze admin_url
+	 *
+	 * @return array
+	 */
+	public function selectFromAdminUrl(): array
+	{
+		return $this->database->table('admin_url')
+						->fetchAll();
+	}
+
+	public function deleteAdminUrl()
+	{
+		$this->database->table('admin_url')
+						->delete();
+	}
+
 	public function getPrices()
 	{
 		return $this->database->query("select 

@@ -25,8 +25,32 @@ class PricePresenter extends BasePresenter
 		$this->template->pokus = 'pokus';
 	}
 
+	/**
+	 * Načítám url z jednotlivých nodů.
+	 *
+	 * @return void
+	 */
+	public function renderUrl()
+	{
+		// Smažu všechno z tabulky url.
+		$this->price->deleteAdminUrl();
+		// Načtu si url z tabulky admin_rul.
+		$getFromAdminUrl = $this->price->selectFromAdminUrl();
+		// Uložím je do tabulky admin_url
+		if (empty($getFromAdminUrl)) {
+			$urls = $this->price->getUrl();
+			foreach ($urls as $url) {
+				$this->price->insertAdminUrl($url);
+			}
+		}
+	}
+
 	public function renderPrice()
 	{
+		// Načtu si url z tabulky admin_url.
+		$getFromAdminUrl = $this->price->selectFromAdminUrl();
+		bdump($getFromAdminUrl, 'get from admin url');
+
 		$db_price = $this->price->getPrices();
 		bdump($db_price, 'price');
 		$db_all = $this->price->getAll();
@@ -59,6 +83,7 @@ class PricePresenter extends BasePresenter
 			bdump($selling_price, 'selling price 1');
 			$selling_price = (int) round($selling_price, 0);
 			bdump($selling_price, 'selling price 2');
+
 			$this->price->updatePrice((int) $selling_price, $item['nid']);
 			$this->price->insertAllData($item, (int) $priceFullWithouZeroo, (int) $selling_price);
 		}
