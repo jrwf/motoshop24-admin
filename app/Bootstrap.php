@@ -17,7 +17,6 @@ class Bootstrap
 		//$configurator->setDebugMode('secret@23.75.345.200'); // enable for your remote IP
 		$configurator->setDebugMode(true);
 		$configurator->enableTracy($appDir . '/log');
-
 		$configurator->setTimeZone('Europe/Prague');
 		$configurator->setTempDirectory($appDir . '/temp');
 
@@ -27,7 +26,11 @@ class Bootstrap
 
 		$configurator->addConfig($appDir . '/config/common.neon');
 		$configurator->addConfig($appDir . '/config/services.neon');
-		$configurator->addConfig($appDir . '/config/local.neon');
+		if ($_SERVER['SERVER_NAME'] === 'localhost') {
+			$configurator->addConfig($appDir . '/config/local.neon');
+		} elseif ($_SERVER['SERVER_NAME'] === 'motoshop24-admin.jw.cz') {
+			$configurator->addConfig($appDir . '/config/local.neon');
+		}
 
 		return $configurator;
 	}
