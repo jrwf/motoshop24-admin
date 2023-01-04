@@ -1,2 +1,4 @@
 config/local.neon
 /.docker/
+.idea
+.docker
