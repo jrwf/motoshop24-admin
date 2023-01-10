@@ -2,5 +2,4 @@ config/local.neon
 config/stage.neon
 .docker
 .idea!/config/stage.neon
-/.docker/
 .idea
