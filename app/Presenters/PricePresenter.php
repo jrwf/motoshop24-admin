@@ -95,7 +95,7 @@ class PricePresenter extends BasePresenter
 			$priceFullWithouZeroo = mb_substr($priceFull, 0, -3);
 			bdump($priceFullWithouZeroo, 'price full zeroo');
 			$all_result = 'price: ' . $priceFullWithouZeroo;
-			$selling_price = (int) $priceFullWithouZeroo * 0.95;
+			$selling_price = (int) $priceFullWithouZeroo * 0.97;
 			bdump($selling_price, 'selling price 1');
 			$selling_price = (int) round($selling_price, 0);
 			bdump($selling_price, 'selling price 2');
