@@ -82,8 +82,8 @@ class PricePresenter extends BasePresenter
 			bdump($ean_page_content_end, 'ean end');
 			if (is_integer($ean_page_content_end)) {
 				$ean = mb_substr($ean_page_content_first, 0, $ean_page_content_end);
+				$eanUp = strtoupper($ean);
 			}
-			$eanUp = strtoupper($ean);
 			bdump($eanUp, 'eanup');
 
 			// Price
@@ -101,6 +101,7 @@ class PricePresenter extends BasePresenter
 			bdump($selling_price, 'selling price 2');
 
 			$this->price->updateCurrentData((int) $priceFullWithouZeroo, $selling_price, $item['nid']);
+			$this->price->updatePrice((int) $selling_price, $item['nid']);
 		}
 		// Zpracuju vybrané řádky
 		// Uložím zpracované data.
