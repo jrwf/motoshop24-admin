@@ -36,7 +36,7 @@ class PriceFasade
 	{
 		bdump($price, 'update price');
 		$this->database->query("update node_revision__field_cena set field_cena_value = ? where entity_id = ?", $price, $nid);
-//		$this->database->query("update node__field_cena set field_cena_value = ? where entity_id = ?", $price, $nid);
+		$this->database->query("update node__field_cena set field_cena_value = ? where entity_id = ?", $price, $nid);
 	}
 
 	/**
