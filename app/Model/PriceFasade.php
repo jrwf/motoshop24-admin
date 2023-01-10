@@ -40,6 +40,40 @@ class PriceFasade
 	}
 
 	/**
+	 * Ukládají se data pro aktuální den.
+	 *
+	 * @param $data
+	 *
+	 * @return void
+	 */
+	public function insertCurrentData($data)
+	{
+		foreach ($data as $item) {
+			// TODO - Upravit jako hromadné ukládání.
+			$this->database->query("insert into admin_prices (nid,url,price_previous) values (?, ?, ?)", $item['nid'], $item['url'], $item['price']);
+		}
+	}
+
+	/**
+	 * Načítám data z aktuálního dne jako kontrola jestli už se neukládaly nové ceny.
+	 *
+	 * @param int $limit
+	 *
+	 * @return array
+	 */
+	public function selectCurrentData(int $limit = 10): array
+	{
+		$date = new \DateTime();
+		$dateDay = $date->format('Y-m-d');
+		return $this->database->query('select * from admin_prices where DATE_FORMAT(created, "%Y-%m-%d") = ? and status_data = 0 limit ?', $dateDay, $limit)->fetchAll();
+	}
+
+	public function updateCurrentData(int $price_new, int $selling_price, int $nid)
+	{
+		$this->database->query("update admin_prices set price_new = ?, selling_price = ?, status_data = 1 where nid = ? ", $price_new, $selling_price, $nid);
+	}
+
+	/**
 	 * @param $data
 	 * @param int $price_new
 	 * @param int $selling_price
