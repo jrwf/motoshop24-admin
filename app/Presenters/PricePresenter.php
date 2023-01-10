@@ -52,17 +52,18 @@ class PricePresenter extends BasePresenter
 		bdump($getFromAdminUrl, 'get from admin url');
 
 		$db_price = $this->price->getPrices();
-		bdump($db_price, 'price');
+		bdump($db_price, 'db price');
 		$db_all = $this->price->getAll();
 //		bdump($db_all, 'db all');
 		$db_result = $this->price->getUrl();
-//		bdump($db_result);
+//		bdump($db_result, 'db result');
 
 		$curl = curl_init();
 		foreach ($db_price as $item) {
 			curl_setopt($curl, CURLOPT_URL, $item['url']);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			$curl_result = curl_exec($curl);
+			bdump($curl_result, 'curl resalt');
 
 			// EAN
 			$ean_page_content = mb_strpos($curl_result, 'product-core-info__partcode'); // Hledam pozici tridy
@@ -70,6 +71,7 @@ class PricePresenter extends BasePresenter
 			$ean_page_content_end = mb_strpos($ean_page_content_first, '</span>');
 			$ean = mb_substr($ean_page_content_first, 0, $ean_page_content_end);
 			$eanUp = strtoupper($ean);
+			bdump($eanUp, 'eanup');
 
 			// Price
 			$firstPosition = mb_strpos($curl_result, 'product-price-full'); // Hledam pozici tridy
@@ -79,7 +81,7 @@ class PricePresenter extends BasePresenter
 			$priceFull = str_replace(' ', '', $price);
 			$priceFullWithouZeroo = mb_substr($priceFull, 0, -3);
 			$all_result = 'price: ' . $priceFullWithouZeroo;
-			$selling_price = $priceFullWithouZeroo * 0.95;
+			$selling_price = (int) $priceFullWithouZeroo * 0.95;
 			bdump($selling_price, 'selling price 1');
 			$selling_price = (int) round($selling_price, 0);
 			bdump($selling_price, 'selling price 2');

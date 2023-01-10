@@ -11,6 +11,5 @@ final class HomepagePresenter extends Nette\Application\UI\Presenter
 {
 	public function renderDefault()
 	{
-		bdump($_SERVER['SERVER_NAME'], 'server');
 	}
 }
