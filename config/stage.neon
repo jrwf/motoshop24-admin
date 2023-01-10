@@ -1,4 +1,7 @@
 database:
-	dsn: 'mysql:host=mysql57.websupport.cz;dbname=motoshop24price'
+	dsn: 'mysql:host=mysql57.websupport.cz;dbname=kxe7klnc'
 	user: 'kxe7klnc'
 	password: 'Bk1)k18{J]'
+#	dsn: 'mysql:host=mysql57.websupport.cz;dbname=motoshop24price'
+#	user: 'kxe7klnc'
+#	password: 'Bk1)k18{J]'
