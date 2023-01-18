@@ -95,7 +95,7 @@
             // Zobrazení selektů
             // https://datatables.net/examples/api/multi_filter_select.html
             initComplete: function () {
-                this.api().columns([5, 10]).every(function () {
+                this.api().columns([]).every(function () {
                     var column = this;
                     var select = $('<select><option value=""></option></select>')
                         .appendTo($(column.header()))
