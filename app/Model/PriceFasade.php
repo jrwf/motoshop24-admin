@@ -61,7 +61,7 @@ class PriceFasade
 	 *
 	 * @return array
 	 */
-	public function selectCurrentData(int $limit = 10): array
+	public function selectCurrentData(int $limit = 20): array
 	{
 		$date = new \DateTime();
 		$dateDay = $date->format('Y-m-d');

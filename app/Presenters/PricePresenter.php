@@ -66,25 +66,20 @@ class PricePresenter extends BasePresenter
 	{
 		// Načtu si určený počet nezpracovaných řádků které mají status 0
 		$todayData = $this->price->selectCurrentData();
-		bdump($todayData, 'dnes');
 		$curl = curl_init();
 		foreach ($todayData as $item) {
 			curl_setopt($curl, CURLOPT_URL, $item['url']);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			$curl_result = curl_exec($curl);
-			bdump($curl_result, 'curl resalt');
 
 			// EAN
 			$ean_page_content = mb_strpos($curl_result, 'product-core-info__partcode'); // Hledam pozici tridy
 			$ean_page_content_first = mb_substr($curl_result, $ean_page_content + 29, 55 ); // Vypisu si retezec od pozice plus 55
 			(int) $ean_page_content_end = mb_strpos($ean_page_content_first, '</span>');
-			bdump($ean_page_content_first, 'ean first');
-			bdump($ean_page_content_end, 'ean end');
 			if (is_integer($ean_page_content_end)) {
 				$ean = mb_substr($ean_page_content_first, 0, $ean_page_content_end);
 				$eanUp = strtoupper($ean);
 			}
-			bdump($eanUp, 'eanup');
 
 			// Price
 			$firstPosition = mb_strpos($curl_result, 'product-price-full'); // Hledam pozici tridy
@@ -93,12 +88,9 @@ class PricePresenter extends BasePresenter
 			$price = mb_substr($content, 0, $kc_position - 1);
 			$priceFull = str_replace(' ', '', $price);
 			$priceFullWithouZeroo = mb_substr($priceFull, 0, -3);
-			bdump($priceFullWithouZeroo, 'price full zeroo');
 			$all_result = 'price: ' . $priceFullWithouZeroo;
 			$selling_price = (int) $priceFullWithouZeroo * 0.97;
-			bdump($selling_price, 'selling price 1');
 			$selling_price = (int) round($selling_price, 0);
-			bdump($selling_price, 'selling price 2');
 
 			$this->price->updateCurrentData((int) $priceFullWithouZeroo, $selling_price, $item['nid']);
 			$this->price->updatePrice((int) $selling_price, $item['nid']);
