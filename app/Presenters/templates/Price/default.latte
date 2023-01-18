@@ -50,7 +50,12 @@
         {foreach $alldata as $item}
             <tr>
                 <td style="width: 40px; text-align: center">{$item['id']}</td>
-                <td style="width: 40px; text-align: center">{$item['status_data']}</td>
+                <td style="width: 40px; text-align: center">
+                    {if $item['status_data'] === 0}
+                        <span style="color: #484848">Ne</span>
+                    {elseif $item['status_data'] === 1}
+                        <span style="color: green">Ano</span>
+                    {/if}</td>
                 <td class="date">{$item['created']|date:'j. n. Y - H:m:s'}</td>
                 <td><a href="https://motoshop24.cz/node/{$item['id']}">{$item['title']}https://motoshop24.cz/node/{$item['id']}</a></td>
                 <td><a href="{$item['url']}">{$item['url']|substr:0, 30} ...</a></td>
