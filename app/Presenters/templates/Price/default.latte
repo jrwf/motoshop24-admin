@@ -36,18 +36,21 @@
         <thead>
         <tr>
             <td>Nid:</td>
+            <td>Status:</td>
             <td class="date">Datum:</td>
             <td>Název položky:</td>
             <td>Url:</td>
             <td class="price">Původní cena:</td>
             <td class="price">Aktuální cena:</td>
-            <td class="price">Prodejní cena (-5%):</td>
+            <td class="price">Prodejní cena (-3%):</td>
         </tr>
         </thead>
         <tbody>
+        {dump $alldata}
         {foreach $alldata as $item}
             <tr>
-                <td>{$item['id']}</td>
+                <td style="width: 40px; text-align: center">{$item['id']}</td>
+                <td style="width: 40px; text-align: center">{$item['status_data']}</td>
                 <td class="date">{$item['created']|date:'j. n. Y - H:m:s'}</td>
                 <td><a href="http://motoshop24.loc/node/{$item['id']}">{$item['title']}</a></td>
                 <td><a href="{$item['url']}">{$item['url']|substr:0, 30} ...</a></td>

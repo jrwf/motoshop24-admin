@@ -170,7 +170,7 @@ class PriceFasade
 	 */
 	public function getDataToTable(): array
 	{
-		return $this->database->query("select nid as id, url, price_previous, price_new, selling_price, created, 
+		return $this->database->query("select nid as id, url, price_previous, price_new, selling_price, created, status_data, 
 										   (select title from node_field_data where nid = id) as title
 											from admin_prices group by nid")->fetchAll();
 	}
