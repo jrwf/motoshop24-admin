@@ -68,9 +68,9 @@ class PriceFasade
 		return $this->database->query('select * from admin_prices where DATE_FORMAT(created, "%Y-%m-%d") = ? and status_data = 0 limit ?', $dateDay, $limit)->fetchAll();
 	}
 
-	public function updateCurrentData(int $price_new, int $selling_price, int $nid)
+	public function updateCurrentData(int $price_new, int $selling_price, int $status_code, int $nid)
 	{
-		$this->database->query("update admin_prices set price_new = ?, selling_price = ?, status_data = 1 where nid = ? ", $price_new, $selling_price, $nid);
+		$this->database->query("update admin_prices set price_new = ?, selling_price = ?, status_data = 1, status_code = ? where nid = ? ", $price_new, $selling_price, $status_code, $nid);
 	}
 
 	public function updateCurrentDataStatusCode(int $statusCode, int $nid)
@@ -175,7 +175,7 @@ class PriceFasade
 	 */
 	public function getDataToTable(): array
 	{
-		return $this->database->query("select nid as id, url, price_previous, price_new, selling_price, created, status_data, 
+		return $this->database->query("select nid as id, url, price_previous, price_new, selling_price, created, status_data, status_code,  
 										   (select title from node_field_data where nid = id) as title
 											from admin_prices group by nid")->fetchAll();
 	}

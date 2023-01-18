@@ -93,7 +93,7 @@ class PricePresenter extends BasePresenter
 				$selling_price = (int) $priceFullWithouZeroo * 0.97;
 				$selling_price = (int) round($selling_price, 0);
 
-				$this->price->updateCurrentData((int) $priceFullWithouZeroo, $selling_price, $item['nid']);
+				$this->price->updateCurrentData((int) $priceFullWithouZeroo, $selling_price, $http_status, $item['nid']);
 				$this->price->updatePrice((int) $selling_price, $item['nid']);
 			} else {
 				$this->price->updateCurrentDataStatusCode($http_status, $item['nid']);

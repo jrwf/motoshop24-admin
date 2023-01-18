@@ -37,6 +37,7 @@
         <tr>
             <td>Nid:</td>
             <td>Proběhlo:</td>
+            <td>Stav:</td>
             <td class="date">Datum:</td>
             <td>Název položky:</td>
             <td>Url:</td>
@@ -56,6 +57,15 @@
                     {elseif $item['status_data'] === 1}
                         <strong style="color: green">Ano</strong>
                     {/if}</td>
+                <td style="width: 60px; text-align: center">
+                    {if $item['status_code'] === 200}
+                        <span style="color: green">V pořádku</span>
+                    {elseif $item['status_code'] === 404}
+                        <strong style="color: red">Nenalezeno</strong>
+                    {elseif $item['status_code'] === 0}
+                        <strong style="color: silver">Zatim nic</strong>
+                    {/if}
+                </td>
                 <td class="date">{$item['created']|date:'j. n. Y - H:m:s'}</td>
                 <td><a href="https://motoshop24.cz/node/{$item['id']}">{$item['title']}https://motoshop24.cz/node/{$item['id']}</a></td>
                 <td><a href="{$item['url']}">{$item['url']|substr:0, 30} ...</a></td>
