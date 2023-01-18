@@ -73,6 +73,11 @@ class PriceFasade
 		$this->database->query("update admin_prices set price_new = ?, selling_price = ?, status_data = 1 where nid = ? ", $price_new, $selling_price, $nid);
 	}
 
+	public function updateCurrentDataStatusCode(int $statusCode, int $nid)
+	{
+		$this->database->query("update admin_prices set status_code = ?, status_data = 1 where nid = ? ", $statusCode, $nid);
+	}
+
 	/**
 	 * @param $data
 	 * @param int $price_new

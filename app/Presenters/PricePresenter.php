@@ -71,29 +71,34 @@ class PricePresenter extends BasePresenter
 			curl_setopt($curl, CURLOPT_URL, $item['url']);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			$curl_result = curl_exec($curl);
+			$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			if ($http_status === 200) {
+				// EAN
+				$ean_page_content = mb_strpos($curl_result, 'product-core-info__partcode'); // Hledam pozici tridy
+				$ean_page_content_first = mb_substr($curl_result, $ean_page_content + 29, 55 ); // Vypisu si retezec od pozice plus 55
+				(int) $ean_page_content_end = mb_strpos($ean_page_content_first, '</span>');
+				if (is_integer($ean_page_content_end)) {
+					$ean = mb_substr($ean_page_content_first, 0, $ean_page_content_end);
+					$eanUp = strtoupper($ean);
+				}
 
-			// EAN
-			$ean_page_content = mb_strpos($curl_result, 'product-core-info__partcode'); // Hledam pozici tridy
-			$ean_page_content_first = mb_substr($curl_result, $ean_page_content + 29, 55 ); // Vypisu si retezec od pozice plus 55
-			(int) $ean_page_content_end = mb_strpos($ean_page_content_first, '</span>');
-			if (is_integer($ean_page_content_end)) {
-				$ean = mb_substr($ean_page_content_first, 0, $ean_page_content_end);
-				$eanUp = strtoupper($ean);
+				// Price
+				$firstPosition = mb_strpos($curl_result, 'product-price-full'); // Hledam pozici tridy
+				$content = mb_substr($curl_result, $firstPosition + 46, 55 ); // Vypisu si retezec od pozice plus 55
+				$kc_position = mb_strpos($content, 'Kč');
+				$price = mb_substr($content, 0, $kc_position - 1);
+				$priceFull = str_replace(' ', '', $price);
+				$priceFullWithouZeroo = mb_substr($priceFull, 0, -3);
+				$all_result = 'price: ' . $priceFullWithouZeroo;
+				$selling_price = (int) $priceFullWithouZeroo * 0.97;
+				$selling_price = (int) round($selling_price, 0);
+
+				$this->price->updateCurrentData((int) $priceFullWithouZeroo, $selling_price, $item['nid']);
+				$this->price->updatePrice((int) $selling_price, $item['nid']);
+			} else {
+				$this->price->updateCurrentDataStatusCode($http_status, $item['nid']);
 			}
 
-			// Price
-			$firstPosition = mb_strpos($curl_result, 'product-price-full'); // Hledam pozici tridy
-			$content = mb_substr($curl_result, $firstPosition + 46, 55 ); // Vypisu si retezec od pozice plus 55
-			$kc_position = mb_strpos($content, 'Kč');
-			$price = mb_substr($content, 0, $kc_position - 1);
-			$priceFull = str_replace(' ', '', $price);
-			$priceFullWithouZeroo = mb_substr($priceFull, 0, -3);
-			$all_result = 'price: ' . $priceFullWithouZeroo;
-			$selling_price = (int) $priceFullWithouZeroo * 0.97;
-			$selling_price = (int) round($selling_price, 0);
-
-			$this->price->updateCurrentData((int) $priceFullWithouZeroo, $selling_price, $item['nid']);
-			$this->price->updatePrice((int) $selling_price, $item['nid']);
 		}
 		// Zpracuju vybrané řádky
 		// Uložím zpracované data.

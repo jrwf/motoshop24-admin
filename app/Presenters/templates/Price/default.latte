@@ -36,7 +36,7 @@
         <thead>
         <tr>
             <td>Nid:</td>
-            <td>Status:</td>
+            <td>Proběhlo:</td>
             <td class="date">Datum:</td>
             <td>Název položky:</td>
             <td>Url:</td>
@@ -50,7 +50,7 @@
         {foreach $alldata as $item}
             <tr>
                 <td style="width: 40px; text-align: center">{$item['id']}</td>
-                <td style="width: 40px; text-align: center">
+                <td style="width: 60px; text-align: center">
                     {if $item['status_data'] === 0}
                         <span style="color: #484848">Ne</span>
                     {elseif $item['status_data'] === 1}
