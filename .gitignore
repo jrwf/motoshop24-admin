@@ -1,5 +1,5 @@
 config/local.neon
 config/stage.neon
-.docker/mysql/*
 .idea!/config/stage.neon
 .idea
+.docker
